@@ -7,7 +7,6 @@ from fuzzywuzzy import process
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'changeme'
-BASE_PATH = './audio/'
 
 
 @app.route('/arnie', methods=['POST'])
@@ -21,10 +20,14 @@ def soundboard():
 
     command = data['command']
     __, sound = command.split('/arnie ')
-    files = os.listdir(BASE_PATH)
+    audio_dir = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        '../audio'
+    )
+    files = os.listdir(audio_dir)
     filename = process.extract(sound, files, limit=1)
     if filename[0][1] != 0:
-        file_path = os.path.join(BASE_PATH, filename[0][0])
+        file_path = os.path.join(audio_dir, filename[0][0])
         subprocess.call(['afplay', file_path])
         response = {
             'response_type': 'in_channel',
