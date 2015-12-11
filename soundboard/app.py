@@ -34,7 +34,7 @@ def soundboard():
         subprocess.call(['afplay', file_path])
         response = {
             'response_type': 'in_channel',
-            'text': 'Playing {0}'.format(sound),
+            'text': '{0}'.format(sound),
         }
     else:
         phrase_list = '\',  \''.join(files).replace('.wav', '')
