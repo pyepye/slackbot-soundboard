@@ -41,7 +41,7 @@ def soundboard():
             'response_type': 'in_channel',
             'text': 'Could not find \'{0}\'. Your choices are:'.format(sound),
             'attachments': [{
-                    'text': '{0}'.format('\',     \''.join(files))
+                'text': '{0}'.format('\',  \''.join(files).replace('.wav', ''))
             }]
         }
     return jsonify(response)
