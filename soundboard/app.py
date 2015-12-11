@@ -13,10 +13,10 @@ app.config['SECRET_KEY'] = 'changeme'
 @app.route('/', methods=['POST'])
 def soundboard():
     sound = request.form['text']
-    command = request.form['command']
+    command = request.form['command'][1:]
     token = request.form['token']
 
-    if token != settings.TOKEN:
+    if not settings.TOKEN.get(token):
         response = {
             'response_type': 'in_channel',
             'text': 'Bad config - token did not match',
@@ -26,14 +26,14 @@ def soundboard():
     audio_dir = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), '../audio'
     )
-    audio_dir = os.path.join(audio_dir, command[1:])
+    audio_dir = os.path.join(audio_dir, command)
     try:
         files = os.listdir(audio_dir)
     except OSError:
         response = {
             'response_type': 'in_channel',
             'text': 'Bad config - No dir in audio/ with the name {0}'.format(
-                command[1:]
+                command
             ),
         }
         return jsonify(response)

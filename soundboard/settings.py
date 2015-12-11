@@ -1,1 +1,3 @@
-TOKEN = 'changeme'
+TOKENS = {
+    'arnie': 'changeme'
+}
