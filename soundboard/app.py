@@ -4,6 +4,8 @@ import subprocess
 from flask import Flask, jsonify, request
 from fuzzywuzzy import process
 
+from soundboard import settings
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'changeme'
 
@@ -12,6 +14,14 @@ app.config['SECRET_KEY'] = 'changeme'
 def soundboard():
     sound = request.form['text']
     command = request.form['command']
+    token = request.form['token']
+
+    if token != settings.TOKEN:
+        response = {
+            'response_type': 'in_channel',
+            'text': 'Bad config - token did not match',
+        }
+        return jsonify(response)
 
     audio_dir = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), '../audio'
