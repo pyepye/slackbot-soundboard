@@ -4,10 +4,11 @@ import subprocess
 from flask import Flask, jsonify, request
 from fuzzywuzzy import process
 
-from soundboard import settings
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'changeme'
+TOKENS = {
+    'arnie': 'changeme',
+}
 
 
 @app.route('/', methods=['POST'])
@@ -16,7 +17,7 @@ def soundboard():
     command = request.form['command'][1:]
     token = request.form['token']
 
-    if not settings.TOKEN.get(token):
+    if token != TOKENS.get(command):
         response = {
             'response_type': 'in_channel',
             'text': 'Bad config - token did not match',
