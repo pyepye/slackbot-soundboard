@@ -8,13 +8,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'changeme'
 
 
-@app.route('/arnie', methods=['POST'])
+@app.route('/', methods=['POST'])
 def soundboard():
     sound = request.form['text']
+    command = request.form['command']
     audio_dir = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        '../audio'
+        os.path.dirname(os.path.realpath(__file__)), '../audio'
     )
+    audio_dir = os.path.join(audio_dir, command[1:])
     files = os.listdir(audio_dir)
     filename = process.extract(sound, files, limit=1)
     if filename[0][1] != 0:
@@ -27,9 +28,9 @@ def soundboard():
     else:
         response = {
             'response_type': 'in_channel',
-            'text': 'Could not find {0}'.format(sound),
+            'text': 'Could not find \'{0}\'. Your choices are:'.format(sound),
             'attachments': [{
-                    'text': 'Choices are \'{0}\''.format(',   '.join(files))
+                    'text': '{0}'.format('\',     \''.join(files))
             }]
         }
     return jsonify(response)
