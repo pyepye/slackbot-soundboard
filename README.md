@@ -5,6 +5,7 @@ Play soundbites via slack command
 ## Install / Run
 * Install nodejs
 * `npm install -g localtunnel`
+* pip install -r requirements.txt
 * `python soundboard/app.py`
 * `lt --port 5000`
 * Drop audio files into audio/[command_name]
