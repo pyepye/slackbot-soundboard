@@ -12,11 +12,22 @@ app.config['SECRET_KEY'] = 'changeme'
 def soundboard():
     sound = request.form['text']
     command = request.form['command']
+
     audio_dir = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), '../audio'
     )
     audio_dir = os.path.join(audio_dir, command[1:])
-    files = os.listdir(audio_dir)
+    try:
+        files = os.listdir(audio_dir)
+    except OSError:
+        response = {
+            'response_type': 'in_channel',
+            'text': 'Bad config - No dir in audio/ with the name {0}'.format(
+                command[1:]
+            ),
+        }
+        return jsonify(response)
+
     filename = process.extract(sound, files, limit=1)
     if filename[0][1] != 0:
         file_path = os.path.join(audio_dir, filename[0][0])
